@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Sweep
+Comment=Minesweeper clone written in C and GTK
+Icon=/usr/share/sweep/img/mine.bmp
+Exec=sweep
+Terminal=false
+Categories=Game
