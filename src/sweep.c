@@ -13,7 +13,6 @@
 //   limitations under the License.
 
 #include <gtk/gtk.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,8 +23,8 @@ uint8_t w;
 uint8_t h;
 int16_t m;
 int16_t f;
-bool run;
-bool usr;
+int8_t run;
+int8_t usr;
 GtkWidget*** evnt;
 GtkWidget* win;
 GtkWidget* box;
@@ -34,7 +33,7 @@ GtkWidget* grid;
 
 void vict() {
 	gtk_label_set_text((GtkLabel*) scr, "victory");
-	run = false;
+	run = 0;
 }
 
 void deft() {
@@ -53,7 +52,7 @@ void deft() {
 		}
 	}
 	gtk_label_set_text((GtkLabel*) scr, "defeat");
-	run = false;
+	run = 0;
 }
 
 void press(GtkWidget* wid, GdkEventButton* evt) {
@@ -86,7 +85,7 @@ void press(GtkWidget* wid, GdkEventButton* evt) {
 			if (wi < (w - 1) && hi < (h - 1) && flag[wi + 1][hi + 1] != 2) press(evnt[wi + 1][hi + 1], evt);
 		}
 		else {
-			char s[27];
+			int8_t s[27];
 			if (usr) sprintf(s, "/usr/share/sweep/img/%hhu.bmp", field[wi][hi]);
 			else sprintf(s, "img/%hhu.bmp", field[wi][hi]);
 			GtkWidget* img = gtk_container_get_children((GtkContainer*) wid)->data;
@@ -120,7 +119,7 @@ void press(GtkWidget* wid, GdkEventButton* evt) {
 		else gtk_image_set_from_file((GtkImage*) img, "img/flag.bmp");
 		flag[wi][hi] = 2;
 		f--;
-		char s[4];
+		int8_t s[4];
 		sprintf(s, "%i", f);
 		gtk_label_set_text((GtkLabel*) scr, s);
 		if (field[wi][hi] == 9) m--;
@@ -132,7 +131,7 @@ void press(GtkWidget* wid, GdkEventButton* evt) {
 		else gtk_image_set_from_file((GtkImage*) img, "img/tile.bmp");
 		flag[wi][hi] = 0;
 		f++;
-		char s[4];
+		int8_t s[4];
 		sprintf(s, "%i", f);
 		gtk_label_set_text((GtkLabel*) scr, s);
 		if (field[wi][hi] == 9) m++;
@@ -185,8 +184,8 @@ void init_field(uint8_t x, uint8_t y, uint16_t n) {
 			i--;
 		}
 	}
-	run = true;
-	char s[4];
+	run = 1;
+	int8_t s[4];
 	sprintf(s, "%u", m);
 	gtk_label_set_text((GtkLabel*) scr, s);
 	gtk_widget_show_all(win);
@@ -210,9 +209,9 @@ void new_field(GtkDialog* dia, int32_t resp, void* data) {
 	GtkWidget* hent = gtk_container_get_children((GtkContainer*) area)->next->data;
 	GtkWidget* ment = gtk_container_get_children((GtkContainer*) area)->next->next->data;
 	GtkWidget* stat = gtk_container_get_children((GtkContainer*) area)->next->next->next->data;
-	const char* wstr = gtk_entry_get_text((GtkEntry*) went);
-	const char* hstr = gtk_entry_get_text((GtkEntry*) hent);
-	const char* mstr = gtk_entry_get_text((GtkEntry*) ment);
+	const int8_t* wstr = gtk_entry_get_text((GtkEntry*) went);
+	const int8_t* hstr = gtk_entry_get_text((GtkEntry*) hent);
+	const int8_t* mstr = gtk_entry_get_text((GtkEntry*) ment);
 	int32_t wint = atoi(wstr);
 	int32_t hint = atoi(hstr);
 	int32_t mint = atoi(mstr);
@@ -258,13 +257,13 @@ void keycb(GtkWidget* wid, GdkEventKey* key) {
 	if (key->keyval == GDK_KEY_Escape) new_game();
 }
 
-int16_t main(int32_t argc, char** argv) {
+int16_t main() {
 	gtk_init(0, NULL);
 	win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	if (fopen("/usr/share/sweep/", "r") != NULL) usr = true;
+	if (fopen("/usr/share/sweep/", "r") != NULL) usr = 1;
 	else gtk_window_set_default_icon_from_file("img/mine.bmp", NULL);
 	gtk_window_set_title((GtkWindow*) win, "sweep");
-	gtk_window_set_resizable((GtkWindow*) win, false);
+	gtk_window_set_resizable((GtkWindow*) win, 0);
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 	gtk_container_add((GtkContainer*) win, box);
 	scr = gtk_label_new(NULL);
